@@ -6,5 +6,5 @@ run `make test-all`
 ## Run Migration
 run `make migrate`
 
-## Run gRPC
-run `make run-grpc`
+## Run server
+run `make run-server`
