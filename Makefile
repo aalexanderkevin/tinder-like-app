@@ -2,6 +2,23 @@ dep:
 	@echo ">> Downloading Dependencies"
 	@go mod download
 
+dep-lint:
+	@echo ">> Downloading golangci-lint"
+	@curl -sSfL "https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh" | sh -s -- -b $$(go env GOPATH)/bin v1.47.2
+
+lint:
+	@echo ">> Running Linter"
+	@$$(go env GOPATH)/bin/golangci-lint run
+
+lint-new:
+	@echo ">> Running Linter on new/updated files"
+	@$$(go env GOPATH)/bin/golangci-lint run --new-from-rev=HEAD~1
+
+hooks:
+	@echo ">> Installing git hooks"
+	git config core.hooksPath .githooks
+
+
 run-server:
 	env $$(cat .env | xargs) go run tinder-like-app/cmd server
 	
