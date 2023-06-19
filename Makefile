@@ -1,3 +1,7 @@
+APP_NAME=tinder-like-app
+VERSION_VAR=main.Version
+VERSION=$(shell git describe --tags)
+
 dep:
 	@echo ">> Downloading Dependencies"
 	@go mod download
@@ -18,6 +22,12 @@ hooks:
 	@echo ">> Installing git hooks"
 	git config core.hooksPath .githooks
 
+build: dep
+	CGO_ENABLED=0 GOOS=linux go build -ldflags "-X ${VERSION_VAR}=${VERSION}" -a -installsuffix nocgo -o ./bin ./...
+
+docker:
+	@echo ">> Building Docker Image"
+	@docker build -t ${APP_NAME}:latest .
 
 run-server:
 	env $$(cat .env | xargs) go run tinder-like-app/cmd server
